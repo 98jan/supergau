@@ -26,9 +26,16 @@ func countdownHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// Statischer Dateihandler
+	fs := http.FileServer(http.Dir("./static"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
+
+	// Handler für den Countdown und die Hauptseite
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "index.html")
 	})
 	http.HandleFunc("/countdown", countdownHandler)
+
+	// Starte den Server
 	http.ListenAndServe(":8080", nil)
 }

@@ -1,24 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Countdown</title>
-    <script>
-        function updateCountdown() {
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById("countdown").innerText = this.responseText;
-                }
-            };
-            xhr.open("GET", "/countdown", true);
-            xhr.send();
+    <title>Countdown bis zum Supergau am 04.02.2024</title>
+    <style>
+        body {
+            background-image: url('/static/start-cd.png'); /* Pfad zum Anfangs-Hintergrundbild */
+            background-size: cover;
+            color: #e8e4e4; /* Für bessere Lesbarkeit, je nach Hintergrundbild */
+            text-align: center;
+            font-family: Arial, sans-serif;
         }
-
-        setInterval(updateCountdown, 1000); // Aktualisiere den Countdown jede Sekunde
-    </script>
+        #countdown {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2em;
+        }
+    </style>
 </head>
 <body>
-<h1>Countdown bis zum Supergau</h1>
-<div id="countdown"></div>
+<div id="countdown">Lädt...</div>
+
+<script>
+    function updateCountdown() {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("countdown").innerText = this.responseText;
+
+                // Prüfen, ob der Countdown abgelaufen ist
+                if (this.responseText.trim() <= "0 Tage 00:00:00") {
+                    document.body.style.backgroundImage = "url('/static/end-cd.png')"; // Pfad zum End-Hintergrundbild
+                }
+            }
+        };
+        xhr.open("GET", "/countdown", true);
+        xhr.send();
+    }
+
+    setInterval(updateCountdown, 1000); // Aktualisiere den Countdown jede Sekunde
+</script>
 </body>
 </html>
